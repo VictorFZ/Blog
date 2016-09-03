@@ -54,7 +54,7 @@ def getArticle(object_id):
 @bottle.route('/Articles', method=['POST'])
 def createArticle():
     HttpHelper.setJsonContentType()
-    article_dict = postBodyToDict()
+    article_dict = HttpHelper.postBodyToDict()
 
     article = Article.Article()
     article.fromDictionary(article_dict)
@@ -76,23 +76,3 @@ def getUsers():
     dicts = map(lambda x: dict(x), users)
 
     return dumps(dicts)
-
-def postBodyToDict():
-    reader = codecs.getreader("utf-8")
-    obj = json.load(reader(request.body))
-    body_dict = json.loads(json.dumps(obj))
-    return body_dict
-
-def getSession():
-    return bottle.request.environ.get('beaker.session')
-
-def getSessionKey(key):
-    session = getSession()
-    if key in session.keys():
-        return session[key]
-    else:
-        return None
-
-def setSessionKey(key, value):
-    session = getSession()
-    session[key] = value

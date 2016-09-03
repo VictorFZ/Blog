@@ -29,9 +29,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
-    <Compile Include="controllers\controller.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="entities\BaseEntity.py">
       <SubType>Code</SubType>
     </Compile>
@@ -70,7 +67,6 @@
     <Compile Include="routes.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="controllers\" />
     <Folder Include="entities\" />
     <Folder Include="helpers\" />
     <Folder Include="providers\" />
@@ -90,7 +86,8 @@
     <Content Include="static\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="static\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="static\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="static\scripts\Angular\PeopleController.js" />
+    <Content Include="static\scripts\Angular\ArticleFactory.js" />
+    <Content Include="static\scripts\Angular\ArticleController.js" />
     <Content Include="static\scripts\bootstrap.js" />
     <Content Include="static\scripts\bootstrap.min.js" />
     <Content Include="static\scripts\jquery-1.10.2.intellisense.js" />
