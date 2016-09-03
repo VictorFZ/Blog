@@ -8,43 +8,22 @@ import json
 import codecs
 import pprint
 import bottle
-from bottle import Bottle, request, response, run, route, view
+from bottle import Bottle, request, response, run, route, view, static_file
 from datetime import datetime
 from beaker.middleware import SessionMiddleware
 from bson import Binary, Code
 from bson.json_util import dumps
-from entities import Entities
+from entities import Article
 from providers import MongoProvider
 from helpers import CollectionHelper, HttpHelper
 
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
+
 @route('/')
 @route('/home')
-@view('index')
 def home():
-    """Renders the home page."""
-    return dict(
-        year=datetime.now().year
-    )
-
-@route('/contact')
-@view('contact')
-def contact():
-    """Renders the contact page."""
-    return dict(
-        title='Contact',
-        message='Your contact page.',
-        year=datetime.now().year
-    )
-
-@route('/about')
-@view('about')
-def about():
-    """Renders the about page."""
-    return dict(
-        title='About',
-        message='Your application description page.',
-        year=datetime.now().year
-    )
+    return static_file("index.html", root=dir_path+'/'+'views/') 
 
 @bottle.route('/Articles', method=['GET'])
 def getArticles():
@@ -53,7 +32,7 @@ def getArticles():
     call = MongoProvider.ArticleCall()
 
     mongoArticles = call.get()
-    articles = map(lambda x: Entities.Article.getInstance(x), mongoArticles)
+    articles = map(lambda x: Article.Article.getInstance(x), mongoArticles)
     dicts = map(lambda x: dict(x), articles)
 
     return dumps(dicts)
@@ -69,7 +48,7 @@ def getArticle(object_id):
     if(mongoArticle is None):
         return dumps(None)
     else:
-        article = Entities.Article.getInstance(mongoArticle)
+        article = Article.Article.getInstance(mongoArticle)
         return dumps(dict(article))
 
 @bottle.route('/Articles', method=['POST'])
@@ -77,7 +56,7 @@ def createArticle():
     HttpHelper.setJsonContentType()
     article_dict = postBodyToDict()
 
-    article = Entities.Article()
+    article = Article.Article()
     article.fromDictionary(article_dict)
     article.ignoreIDSerialization()
 
@@ -103,7 +82,6 @@ def postBodyToDict():
     obj = json.load(reader(request.body))
     body_dict = json.loads(json.dumps(obj))
     return body_dict
-	#content = json.loads(body, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
 
 def getSession():
     return bottle.request.environ.get('beaker.session')

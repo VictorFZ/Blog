@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="MongoApp">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mongo Blog</title>
+    <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
+    <script src="/static/scripts/modernizr-2.6.2.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="/static/scripts/Angular/PeopleController.js"></script>
+</head>
+
+<body>
+    <div ng-controller="PeopleController as peopleCtrl" ng-init="peopleCtrl.init()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="person in peopleCtrl.people">
+                    <td><strong>{{ person.Name }}</strong></td>
+                    <td>{{ person.Gender }}</td>
+                    <td>{{ person.Age }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="/static/scripts/jquery-1.10.2.js"></script>
+    <script src="/static/scripts/bootstrap.js"></script>
+    <script src="/static/scripts/respond.js"></script>
+   
+</body>
+</html>

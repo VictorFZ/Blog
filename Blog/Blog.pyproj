@@ -32,7 +32,28 @@
     <Compile Include="controllers\controller.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="entities\Entities.py">
+    <Compile Include="entities\BaseEntity.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\Category.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\Comment.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\Article.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\Tag.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\User.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\Validation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="entities\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\CollectionHelper.py">
@@ -41,9 +62,11 @@
     <Compile Include="helpers\HttpHelper.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="helpers\__init__.py" />
     <Compile Include="providers\MongoProvider.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="providers\__init__.py" />
     <Compile Include="routes.py" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +78,7 @@
     <Folder Include="static\content\" />
     <Folder Include="static\fonts\" />
     <Folder Include="static\scripts\" />
+    <Folder Include="static\scripts\Angular\" />
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +90,7 @@
     <Content Include="static\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="static\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="static\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="static\scripts\Angular\PeopleController.js" />
     <Content Include="static\scripts\bootstrap.js" />
     <Content Include="static\scripts\bootstrap.min.js" />
     <Content Include="static\scripts\jquery-1.10.2.intellisense.js" />
@@ -81,9 +106,7 @@
     <Content Include="static\scripts\respond.js" />
     <Content Include="static\scripts\respond.min.js" />
     <Content Include="static\scripts\_references.js" />
-    <Content Include="views\about.tpl" />
-    <Content Include="views\contact.tpl" />
-    <Content Include="views\index.tpl" />
+    <Content Include="views\index.html" />
     <Content Include="views\layout.tpl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
