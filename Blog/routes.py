@@ -52,6 +52,7 @@ def createArticle():
     article = Article.Article.getInstance(article_dict)
 
     article.ignoreIDSerialization()
+    article.setPublishTimeToNow()
 
     call = MongoProvider.ArticleCall()
     call.insert(dict(article))

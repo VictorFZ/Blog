@@ -6,6 +6,7 @@ from entities.Tag import Tag
 from entities.Comment import Comment
 from entities.Category import Category
 from entities.Validation import Validation
+from datetime import datetime
 
 class Article(BaseEntity):
     def __init__(self, name = "", publish_date = "", slug = "", text = "", author = "", comments = [], tags = [], categories = []):
@@ -33,6 +34,9 @@ class Article(BaseEntity):
 
     def validate(self):
         return Validation("true","OK")
+
+    def setPublishTimeToNow(self):
+        self.publish_date = datetime.utcnow()
 
     def fromDictionary(self, dictionary):
         for k, v in dictionary.items():
