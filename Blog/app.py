@@ -1,17 +1,15 @@
-import bottle
-from bottle import request, response, run
 import os
 import sys
+import bottle
+from bottle import request, response, run
 from beaker.middleware import SessionMiddleware
 import routes
 
-session_opts = {
+app = SessionMiddleware(bottle.app(), {
     'session.type': 'memory',
     'session.cookie_expires': 300,
     'session.auto': True
-}
-
-app = SessionMiddleware(bottle.app(), session_opts)
+})
 
 @bottle.hook('after_request')
 def enable_cors():
