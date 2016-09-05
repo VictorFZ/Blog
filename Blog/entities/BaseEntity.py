@@ -2,15 +2,16 @@ import sys
 import json
 
 class BaseEntity(object):
-	def __init__(self, ignore_id = False):
-		self.oid = ""
-		self.ignore_id = ignore_id
+    def __init__(self, ignore_id = False, propertiesToCustomDict = []):
+        self.oid = ""
+        self.ignore_id = ignore_id
+        self.propertiesToCustomDict = propertiesToCustomDict
 
-	def fromDictionary(self, dictionary):
-		for k, v in dictionary.items():
-			setattr(self, k, v)
-		if '_id' in dictionary:
-			setattr(self, "oid", str(dictionary["_id"]))
+    def fromDictionary(self, dictionary):
+        for k, v in dictionary.items():
+        	setattr(self, k, v)
+        if '_id' in dictionary:
+        	setattr(self, "oid", str(dictionary["_id"]))
 
-	def ignoreIDSerialization(self):
-		self.ignore_id = True
+    def ignoreIDSerialization(self):
+        self.ignore_id = True

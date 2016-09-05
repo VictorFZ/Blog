@@ -3,7 +3,7 @@ import json
 from entities.BaseEntity import BaseEntity
 
 class Comment(BaseEntity):
-	def __init__(self, comment = "", date = "", author = User()):
+	def __init__(self, comment = "", date = "", author = ""):
 		BaseEntity.__init__(self, True)
 		self.comment = comment
 		self.date = date
@@ -14,7 +14,7 @@ class Comment(BaseEntity):
 			yield 'oid', self.oid
 		yield 'comment', self.comment
 		yield 'date', self.date
-		yield 'author', dict(self.author)
+		yield 'author', self.author
 
 	def getInstance(dict):
 		comment = Comment()

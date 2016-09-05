@@ -1,3 +1,6 @@
+import codecs
+import json
+import bottle
 from bottle import request, response, run
 
 def setJsonContentType():

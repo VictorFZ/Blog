@@ -1,12 +1,5 @@
-"""
-Routes and views for the bottle application.
-"""
-
-
 import os
 import json
-import codecs
-import pprint
 import bottle
 from bottle import Bottle, request, response, run, route, view, static_file
 from datetime import datetime
@@ -23,7 +16,7 @@ dir_path = os.path.dirname(path)
 @route('/')
 @route('/home')
 def home():
-    return static_file("index.html", root=dir_path+'/'+'views/') 
+    return static_file("index.html", root=dir_path+'/'+'views/')
 
 @bottle.route('/Articles', method=['GET'])
 def getArticles():
@@ -49,15 +42,15 @@ def getArticle(object_id):
         return dumps(None)
     else:
         article = Article.Article.getInstance(mongoArticle)
+
         return dumps(dict(article))
 
 @bottle.route('/Articles', method=['POST'])
 def createArticle():
     HttpHelper.setJsonContentType()
     article_dict = HttpHelper.postBodyToDict()
+    article = Article.Article.getInstance(article_dict)
 
-    article = Article.Article()
-    article.fromDictionary(article_dict)
     article.ignoreIDSerialization()
 
     call = MongoProvider.ArticleCall()
