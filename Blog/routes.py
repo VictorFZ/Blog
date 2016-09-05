@@ -55,9 +55,9 @@ def createArticle():
     article.setPublishTimeToNow()
 
     call = MongoProvider.ArticleCall()
-    call.insert(dict(article))
+    ret = call.insert(dict(article))
 
-    return dumps("true")
+    return dumps(str(ret.inserted_id))
 
 @bottle.route('/Users', method=['GET'])
 def getUsers():
