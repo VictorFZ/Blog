@@ -1,12 +1,14 @@
 import sys
 import json
+import time
 from bson.objectid import ObjectId
 from entities.BaseEntity import BaseEntity
 from entities.Tag import Tag
 from entities.Comment import Comment
 from entities.Category import Category
 from entities.Validation import Validation
-from datetime import datetime
+from datetime import datetime, timedelta
+from functools import reduce
 
 class Article(BaseEntity):
     def __init__(self, name = "", publish_date = "", slug = "", text = "", author = "", comments = [], tags = [], categories = []):
@@ -19,10 +21,19 @@ class Article(BaseEntity):
         self.comments = comments
         self.tags = tags
         self.categories = categories
+        self.author_name = ""
+        self.publish_date_formatted = ""
+        self.tags_joined = ""
+        self.categories_joined = ""
 
     def __iter__(self):
-        if(self.ignore_id == False):
-        	yield 'oid', self.oid
+        if(self.mongo_serialize == False):
+            yield 'oid', self.oid
+            yield 'author_name', self.author_name
+            yield 'publish_date_formatted', self.publish_date_formatted
+            yield 'tags_joined', self.tags_joined
+            yield 'categories_joined', self.categories_joined
+
         yield 'name', self.name
         yield 'slug', self.slug
         yield 'publish_date', self.publish_date
@@ -48,8 +59,14 @@ class Article(BaseEntity):
                     setattr(self, k, v)
         if '_id' in dictionary:
             setattr(self, "oid", str(dictionary["_id"]))
+        self.format()
 
     def getInstance(dict):
         article = Article()
         article.fromDictionary(dict)
         return article
+
+    def format(self):
+        self.publish_date_formatted = (self.publish_date - timedelta(hours=3)).strftime("%Y-%m-%d %H:%M")
+        self.tags_joined = ",".join(list(map(lambda x: x.value,self.tags)))
+        self.categories_joined = ",".join(list(map(lambda x: x.value,self.categories)))

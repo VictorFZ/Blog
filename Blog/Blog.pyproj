@@ -72,6 +72,7 @@
     <Folder Include="providers\" />
     <Folder Include="static\" />
     <Folder Include="static\content\" />
+    <Folder Include="static\content\fonts\" />
     <Folder Include="static\fonts\" />
     <Folder Include="static\scripts\" />
     <Folder Include="static\scripts\Angular\" />
@@ -81,6 +82,9 @@
     <Content Include="requirements.txt" />
     <Content Include="static\content\bootstrap.css" />
     <Content Include="static\content\bootstrap.min.css" />
+    <Content Include="static\content\fonts\Ubuntu-C.ttf" />
+    <Content Include="static\content\fonts\Ubuntu-L.ttf" />
+    <Content Include="static\content\index.css" />
     <Content Include="static\content\site.css" />
     <Content Include="static\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="static\fonts\glyphicons-halflings-regular.svg" />

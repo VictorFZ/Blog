@@ -1,6 +1,10 @@
-﻿body {
+﻿ @font-face { font-family: Ubuntu; src: url('fonts/Ubuntu-L.ttf'); } 
+ @font-face { font-family: Ubuntu-C; src: url('fonts/Ubuntu-C.ttf'); } 
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: Ubuntu
 }
 
 /* Set padding to keep content from hitting the edges */

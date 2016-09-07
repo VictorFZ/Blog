@@ -2,9 +2,9 @@ import sys
 import json
 
 class BaseEntity(object):
-    def __init__(self, ignore_id = False, propertiesToCustomDict = []):
+    def __init__(self, mongo_serialize = False, propertiesToCustomDict = []):
         self.oid = ""
-        self.ignore_id = ignore_id
+        self.mongo_serialize = mongo_serialize
         self.propertiesToCustomDict = propertiesToCustomDict
 
     def fromDictionary(self, dictionary):
@@ -13,5 +13,5 @@ class BaseEntity(object):
         if '_id' in dictionary:
         	setattr(self, "oid", str(dictionary["_id"]))
 
-    def ignoreIDSerialization(self):
-        self.ignore_id = True
+    def mongoSerialization(self):
+        self.mongo_serialize = True

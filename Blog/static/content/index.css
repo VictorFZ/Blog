@@ -1,0 +1,26 @@
+﻿.main {
+    padding: 0 20% 0 20%
+}
+
+.article .title {
+    text-align: center;
+    font-weight: bold
+}
+
+.article .date {
+    text-align: right;
+    font-size: small;
+    padding-top: 20px
+}
+
+.article .body {
+    border-top: solid 1px #ccc;
+    font-size: medium;
+    margin: 10px 0 15px;
+    padding-left: 10px
+}
+
+.article .footer {
+    border-top: solid 1px #ccc; 
+    font-size: small
+}

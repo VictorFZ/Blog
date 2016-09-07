@@ -26,6 +26,7 @@ def getArticles():
 
     mongoArticles = call.get()
     articles = map(lambda x: Article.Article.getInstance(x), mongoArticles)
+    
     dicts = map(lambda x: dict(x), articles)
 
     return dumps(dicts)
@@ -42,7 +43,7 @@ def getArticle(object_id):
         return dumps(None)
     else:
         article = Article.Article.getInstance(mongoArticle)
-
+        article.format("")
         return dumps(dict(article))
 
 @bottle.route('/Articles', method=['POST'])
@@ -51,7 +52,7 @@ def createArticle():
     article_dict = HttpHelper.postBodyToDict()
     article = Article.Article.getInstance(article_dict)
 
-    article.ignoreIDSerialization()
+    article.mongoSerialization()
     article.setPublishTimeToNow()
 
     call = MongoProvider.ArticleCall()

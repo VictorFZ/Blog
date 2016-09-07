@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mongo Blog</title>
     <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
+    <link rel="stylesheet" type="text/css" href="/static/content/site.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/content/index.css" />
     <script src="/static/scripts/modernizr-2.6.2.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="/static/scripts/Angular/ArticleController.js"></script>
@@ -13,19 +14,25 @@
 </head>
 
 <body ng-controller="ArticleController as ctrl" ng-init="ctrl.init()" ng-cloak>
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="article in ctrl.articles">
-                    <td><strong>{{ article.name }}</strong></td>
-                </tr>
-            </tbody>
-        </table>
+<div class="main">
+        <div class="jumbotron article" ng-repeat="article in ctrl.articles">
+            <div class="row header">
+                <div class="col-md-4 title">
+                </div>
+                <div class="col-md-4 title">
+                    <div>{{ article.name }}</div>
+                </div>
+                <div class="col-md-4 date">
+                    <div>{{ article.publish_date_formatted }}</div>
+                </div>
+            </div>
+            <div class="body">{{article.text}}</div>
+            <div class="footer">
+                <div>by {{article.author_name}}</div>
+                <div>tags: {{article.tags_joined}} </div>
+                <div>categories: {{article.categories_joined}} </div>
+            </div>
+        </div>
     </div>
 
     <script src="/static/scripts/jquery-1.10.2.js"></script>

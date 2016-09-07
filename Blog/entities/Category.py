@@ -8,7 +8,7 @@ class Category(BaseEntity):
 		self.value = value
 
 	def __iter__(self):
-		if(self.ignore_id == False):
+		if(self.mongo_serialize == False):
 			yield 'oid', self.oid
 		yield 'value', self.value
 

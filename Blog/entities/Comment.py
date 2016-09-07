@@ -11,7 +11,7 @@ class Comment(BaseEntity):
     	self.author = author
 
     def __iter__(self):
-    	if(self.ignore_id == False):
+    	if(self.mongo_serialize == False):
     		yield 'oid', self.oid
     	yield 'comment', self.comment
     	yield 'date', self.date

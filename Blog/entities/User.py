@@ -9,7 +9,7 @@ class User(BaseEntity):
 		self.email = email
 
 	def __iter__(self):
-		if(self.ignore_id == False):
+		if(self.mongo_serialize == False):
 			yield 'oid', self.oid
 		yield 'name', self.name
 		yield 'email', self.email
