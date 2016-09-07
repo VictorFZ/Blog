@@ -25,7 +25,7 @@ def getArticles():
     call = MongoProvider.ArticleCall()
 
     mongoArticles = call.get()
-    articles = map(lambda x: Article.Article.getInstance(x), mongoArticles)
+    articles = map(lambda x: Article.Article.getInstance(x, True), mongoArticles)
     
     dicts = map(lambda x: dict(x), articles)
 
@@ -42,7 +42,7 @@ def getArticle(object_id):
     if(mongoArticle is None):
         return dumps(None)
     else:
-        article = Article.Article.getInstance(mongoArticle)
+        article = Article.Article.getInstance(mongoArticle, True)
         article.format("")
         return dumps(dict(article))
 

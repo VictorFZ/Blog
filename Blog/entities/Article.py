@@ -49,7 +49,7 @@ class Article(BaseEntity):
     def setPublishTimeToNow(self):
         self.publish_date = datetime.utcnow()
 
-    def fromDictionary(self, dictionary):
+    def fromDictionary(self, dictionary, format):
         for k, v in dictionary.items():
             found = next((x for x in self.propertiesToCustomDict if x['p'] == k), None)
             if (found is not None and v is not None):
@@ -59,11 +59,13 @@ class Article(BaseEntity):
                     setattr(self, k, v)
         if '_id' in dictionary:
             setattr(self, "oid", str(dictionary["_id"]))
-        self.format()
 
-    def getInstance(dict):
+        if(format):
+            self.format()
+
+    def getInstance(dict, format = False):
         article = Article()
-        article.fromDictionary(dict)
+        article.fromDictionary(dict, format)
         return article
 
     def format(self):
