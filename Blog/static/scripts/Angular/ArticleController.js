@@ -11,6 +11,12 @@ angularApp.controller('ArticleController', function ($scope, articleFactory) {
         });
     }
 
+    function loadLoggedUser() {
+        self.articles = articleFactory.getArticles(function (response) {
+            self.articles = response;
+        });
+    }
+
     self.init = function () {
         loadArticles();
     }

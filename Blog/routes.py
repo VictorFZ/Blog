@@ -6,7 +6,7 @@ from datetime import datetime
 from beaker.middleware import SessionMiddleware
 from bson import Binary, Code
 from bson.json_util import dumps
-from entities import Article
+from entities import Article, User
 from providers import MongoProvider
 from helpers import CollectionHelper, HttpHelper
 
@@ -43,7 +43,7 @@ def getArticle(object_id):
         return dumps(None)
     else:
         article = Article.Article.getInstance(mongoArticle, True)
-        article.format("")
+        article.format()
         return dumps(dict(article))
 
 @bottle.route('/Articles', method=['POST'])
@@ -71,3 +71,22 @@ def getUsers():
     dicts = map(lambda x: dict(x), users)
 
     return dumps(dicts)
+
+@bottle.route('/Users/Logged', method=['GET'])
+def getLoggedUser():
+    HttpHelper.setJsonContentType()
+    user = HttpHelper.getSessionKey("logged_user")
+
+    if(user is None):
+        return None
+    else:
+        userAsDict = dict(user)
+        return dumps(userAsDict)
+
+@bottle.route('/Users/Logged', method=['POST'])
+def logUser():
+    user_dict = HttpHelper.postBodyToDict()
+    user = User.User.getInstance(user_dict)
+    HttpHelper.setSessionKey("logged_user", user)
+
+    return True

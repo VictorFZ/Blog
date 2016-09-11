@@ -41,4 +41,4 @@ if __name__ == '__main__':
         the server should be configured to serve the static files."""
         return bottle.static_file(filepath, root=STATIC_ROOT)
 
-    bottle.run(server='wsgiref', host=HOST, port=8080)
+    bottle.run(app=app,server='wsgiref', host=HOST, port=8080)

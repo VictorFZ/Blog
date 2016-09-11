@@ -2,6 +2,7 @@ import codecs
 import json
 import bottle
 from bottle import request, response, run
+from beaker.middleware import SessionMiddleware
 
 def setJsonContentType():
     response.content_type = 'application/json'
