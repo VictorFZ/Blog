@@ -89,4 +89,4 @@ def logUser():
     user = User.User.getInstance(user_dict)
     HttpHelper.setSessionKey("logged_user", user)
 
-    return True
+    return dumps("true")
