@@ -56,6 +56,7 @@
     <Compile Include="helpers\CollectionHelper.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="helpers\EncryptionHelper.py" />
     <Compile Include="helpers\HttpHelper.py">
       <SubType>Code</SubType>
     </Compile>
@@ -79,6 +80,9 @@
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="installed_modules.txt">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="requirements.txt" />
     <Content Include="static\content\bootstrap.css" />
     <Content Include="static\content\bootstrap.min.css" />

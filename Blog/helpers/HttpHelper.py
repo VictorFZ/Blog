@@ -26,3 +26,7 @@ def getSessionKey(key):
 def setSessionKey(key, value):
     session = getSession()
     session[key] = value
+
+def removeSession():
+    session = getSession()
+    session.delete()

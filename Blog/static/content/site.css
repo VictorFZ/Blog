@@ -2,7 +2,6 @@
  @font-face { font-family: Ubuntu-C; src: url('fonts/Ubuntu-C.ttf'); } 
 
 body {
-    padding-top: 50px;
     padding-bottom: 20px;
     font-family: Ubuntu
 }
@@ -43,4 +42,8 @@ input[type="checkbox"].input-validation-error {
 
 .validation-summary-valid {
     display: none;
+}
+
+.pointer {
+    cursor: pointer
 }

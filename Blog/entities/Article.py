@@ -44,7 +44,7 @@ class Article(BaseEntity):
         yield 'categories', list(map(lambda x: dict(x), self.categories))
 
     def validate(self):
-        return Validation("true","OK")
+        return Validation(True)
 
     def setPublishTimeToNow(self):
         self.publish_date = datetime.utcnow()

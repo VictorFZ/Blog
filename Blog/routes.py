@@ -6,9 +6,9 @@ from datetime import datetime
 from beaker.middleware import SessionMiddleware
 from bson import Binary, Code
 from bson.json_util import dumps
-from entities import Article, User
+from entities import Article, User, Validation
 from providers import MongoProvider
-from helpers import CollectionHelper, HttpHelper
+from helpers import CollectionHelper, HttpHelper, EncryptionHelper
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -72,7 +72,7 @@ def getUsers():
 
     return dumps(dicts)
 
-@bottle.route('/Users/Logged', method=['GET'])
+@bottle.route('/Users/Login', method=['GET'])
 def getLoggedUser():
     HttpHelper.setJsonContentType()
     user = HttpHelper.getSessionKey("logged_user")
@@ -80,13 +80,45 @@ def getLoggedUser():
     if(user is None):
         return None
     else:
-        userAsDict = dict(user)
-        return dumps(userAsDict)
+        return dumps(user)
 
-@bottle.route('/Users/Logged', method=['POST'])
+@bottle.route('/Users/Login', method=['POST'])
 def logUser():
-    user_dict = HttpHelper.postBodyToDict()
-    user = User.User.getInstance(user_dict)
-    HttpHelper.setSessionKey("logged_user", user)
+    HttpHelper.setJsonContentType()
+    login_dict = HttpHelper.postBodyToDict()
+    call = MongoProvider.UserCall()
 
-    return dumps("true")
+    mongoUsers = call.getByQuery({"$and": [{"email": login_dict["email"]}, {"password": login_dict["password"]}]})
+    mongoUser = CollectionHelper.firstOrDefault(mongoUsers)
+    if(mongoUser is None):
+        return dumps(None)
+    else:
+        d = dict(mongoUser)
+        HttpHelper.setSessionKey("logged_user", d)
+        return dumps(d)
+
+@bottle.route('/Users/Logout', method=['GET'])
+def logOutUser():
+    HttpHelper.setJsonContentType()
+    HttpHelper.removeSession()
+    return dumps(True)
+
+@bottle.route('/Users/Sigin', method=['POST'])
+def signinUser():
+    HttpHelper.setJsonContentType()
+    signin_dict = HttpHelper.postBodyToDict()
+    call = MongoProvider.UserCall()
+
+    mongoUsers = call.getByQuery({"email": signin_dict["email"]})
+    mongoUser = CollectionHelper.firstOrDefault(mongoUsers)
+    if(mongoUser is not None):
+        return dumps(dict(Validation.Validation(False, "A user with the same email already exists")))
+    else:
+        user = User.User.getInstance(signin_dict)
+        validation = user.validate()
+        if(validation.success == True):
+            user.mongoSerialization()
+            ret = call.insert(dict(user))
+
+        return validation
+
