@@ -36,10 +36,13 @@ class Article(BaseEntity):
 
         yield 'name', self.name
         yield 'slug', self.slug
-        yield 'publish_date', self.publish_date
-        yield 'text', self.text
-        yield 'author', self.author
-        yield 'comments', list(map(lambda x: dict(x), self.comments))
+        yield 'text', self.text            
+
+        if(self.mongo_serialize_is_edit == False):
+            yield 'publish_date', self.publish_date
+            yield 'author', self.author
+            yield 'comments', list(map(lambda x: dict(x), self.comments))
+
         yield 'tags', list(map(lambda x: dict(x), self.tags))
         yield 'categories', list(map(lambda x: dict(x), self.categories))
 
@@ -72,6 +75,7 @@ class Article(BaseEntity):
         return article
 
     def format(self):
-        self.publish_date_formatted = (self.publish_date - timedelta(hours=3)).strftime("%Y-%m-%d %H:%M")
+        if(self.publish_date != ""):
+            self.publish_date_formatted = (self.publish_date - timedelta(hours=3)).strftime("%Y-%m-%d %H:%M")
         self.tags_joined = ",".join(list(map(lambda x: x.value,self.tags)))
         self.categories_joined = ",".join(list(map(lambda x: x.value,self.categories)))

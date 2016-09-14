@@ -79,6 +79,22 @@ def createArticle(object_id):
 
     return dumps(True)
 
+@bottle.route('/Articles/<object_id>', method=['PUT'])
+def createArticle(object_id):
+    HttpHelper.setJsonContentType()
+
+    article_dict = HttpHelper.postBodyToDict()
+    article = Article.Article.getInstance(article_dict)
+
+    validation = article.validate()
+    if(validation.success == True):
+        article.mongoSerialization(True)
+        article_edit_dict =  dict(article)
+        call = MongoProvider.ArticleCall()
+        ret = call.updateEntireDocument(object_id, article_edit_dict)
+
+    return dumps(dict(validation))
+
 @bottle.route('/Users', method=['GET'])
 def getUsers():
     HttpHelper.setJsonContentType()
