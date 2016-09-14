@@ -3,7 +3,8 @@
 
 body {
     padding-bottom: 20px;
-    font-family: Ubuntu
+    font-family: Ubuntu;
+    padding-top: 65px;
 }
 
 /* Set padding to keep content from hitting the edges */

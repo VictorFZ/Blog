@@ -49,6 +49,9 @@ class Article(BaseEntity):
     def setPublishTimeToNow(self):
         self.publish_date = datetime.utcnow()
 
+    def setAuthor(self, user_id):
+        self.author = user_id
+
     def fromDictionary(self, dictionary, format):
         for k, v in dictionary.items():
             found = next((x for x in self.propertiesToCustomDict if x['p'] == k), None)

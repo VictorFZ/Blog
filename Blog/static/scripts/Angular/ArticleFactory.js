@@ -19,11 +19,21 @@ angularApp.factory('articleFactory', function ($http) {
         $http.post("/Users/Sigin", model).success(success).error(error);
     }
 
+    function deleteArticle(oid, success, error) {
+        $http.delete("/Articles/" + oid).success(success).error(error);
+    }
+
+    function createArticle(article, success, error) {
+        $http.post("/Articles", article).success(success).error(error);
+    }
+
     return {
         getArticles: getArticles,
         getLoggedUser: getLoggedUser,
         loginUser: loginUser,
         signinUser: signinUser,
-        logoutUser: logoutUser
+        logoutUser: logoutUser,
+        deleteArticle: deleteArticle,
+        createArticle: createArticle
     };
 });

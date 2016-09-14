@@ -24,3 +24,8 @@
     border-top: solid 1px #ccc; 
     font-size: small
 }
+
+.article .delete {
+    font-size: 13px;
+    padding-top: 20px
+}

@@ -49,16 +49,35 @@ def getArticle(object_id):
 @bottle.route('/Articles', method=['POST'])
 def createArticle():
     HttpHelper.setJsonContentType()
+
+    user = HttpHelper.getSessionKey("logged_user")
+
+    if(user is None):
+        return dumps(dict(Validation.Validation(False, "You are not logged in")))
+
     article_dict = HttpHelper.postBodyToDict()
     article = Article.Article.getInstance(article_dict)
 
-    article.mongoSerialization()
-    article.setPublishTimeToNow()
+    validation = article.validate()
+    if(validation.success == True):
+        article.mongoSerialization()
+        article.setPublishTimeToNow()
+        article.setAuthor(str(user["_id"]))
+
+        call = MongoProvider.ArticleCall()
+        ret = call.insert(dict(article))
+        validation.id = str(ret.inserted_id)
+
+    return dumps(dict(validation))
+
+@bottle.route('/Articles/<object_id>', method=['DELETE'])
+def createArticle(object_id):
+    HttpHelper.setJsonContentType()
 
     call = MongoProvider.ArticleCall()
-    ret = call.insert(dict(article))
+    ret = call.delete(object_id)
 
-    return dumps(str(ret.inserted_id))
+    return dumps(True)
 
 @bottle.route('/Users', method=['GET'])
 def getUsers():
@@ -112,7 +131,7 @@ def signinUser():
     mongoUsers = call.getByQuery({"email": signin_dict["email"]})
     mongoUser = CollectionHelper.firstOrDefault(mongoUsers)
     if(mongoUser is not None):
-        return dumps(dict(Validation.Validation(False, "A user with the same email already exists")))
+        return dumps(dict(Validation.Validation(False, "A user with the same email already exists!")))
     else:
         user = User.User.getInstance(signin_dict)
         validation = user.validate()
@@ -120,5 +139,5 @@ def signinUser():
             user.mongoSerialization()
             ret = call.insert(dict(user))
 
-        return validation
+        return dumps(dict(validation))
 
