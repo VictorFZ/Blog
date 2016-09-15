@@ -47,6 +47,11 @@ class Article(BaseEntity):
         yield 'categories', list(map(lambda x: dict(x), self.categories))
 
     def validate(self):
+        if(self.text == ""):
+            return Validation(False,"Article body must not be empty")
+        if(self.name == ""):
+            return Validation(False,"Article must have a title")
+
         return Validation(True)
 
     def setPublishTimeToNow(self):

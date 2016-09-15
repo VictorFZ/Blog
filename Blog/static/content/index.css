@@ -2,6 +2,11 @@
     padding: 0 20% 0 20%
 }
 
+.article {
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
 .article .title {
     text-align: center;
     font-weight: bold
@@ -28,4 +33,17 @@
 .article .delete {
     font-size: 13px;
     padding-top: 20px
+}
+
+.comments {
+    margin-left: 10%
+}
+
+#comment-article-text-input {
+    min-width: 100% !important;
+}
+
+#submit-comment-button {
+    margin-top: 10px;
+    float: right
 }

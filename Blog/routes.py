@@ -6,7 +6,7 @@ from datetime import datetime
 from beaker.middleware import SessionMiddleware
 from bson import Binary, Code
 from bson.json_util import dumps
-from entities import Article, User, Validation
+from entities import Article, User, Validation, Comment
 from providers import MongoProvider
 from helpers import CollectionHelper, HttpHelper, EncryptionHelper
 
@@ -92,6 +92,42 @@ def createArticle(object_id):
         article_edit_dict =  dict(article)
         call = MongoProvider.ArticleCall()
         ret = call.updateEntireDocument(object_id, article_edit_dict)
+
+    return dumps(dict(validation))
+
+@bottle.route('/Articles/<object_id>/Comment', method=['POST'])
+def createArticle(object_id):
+    HttpHelper.setJsonContentType()
+
+    user = HttpHelper.getSessionKey("logged_user")
+
+    if(user is None):
+        return dumps(dict(Validation.Validation(False, "You are not logged in")))
+
+    comment_dict = HttpHelper.postBodyToDict()
+    comment = Comment.Comment.getInstance(comment_dict)
+    
+    validation = comment.validate()
+    if(validation.success == True):
+        article.setPublishTimeToNow()
+        article.setAuthor(str(user["_id"]))
+        comment.mongoSerialization(True)
+
+        call = MongoProvider.ArticleCall()
+
+        mongoArticles = call.getByID(object_id)
+        mongoArticle = CollectionHelper.firstOrDefault(mongoArticles)
+        if(mongoArticle is not None):
+            article = Article.Article.getInstance(mongoArticle, True)
+            article_comments = article.comments
+
+            if(article_comments is None):
+                article_comments = []
+
+            article_comments.append(comment)
+
+            call = MongoProvider.ArticleCall()
+            ret = call.updateEntireDocument(object_id, {comments: article_comments})
 
     return dumps(dict(validation))
 
