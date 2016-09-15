@@ -229,8 +229,8 @@
             </div>
             <div class="row" style="padding: 0 30px 0 30px">
                 Leave a comment:
-                <textarea ng-model="ctrl.commentArticleInput" class="form-control" id="comment-article-text-input"></textarea>
-                <button id="submit-comment-button" class="btn btn-default">Submit</button>
+                <textarea input-oid="{{article.oid}}" class="form-control comment-article-text-input" ></textarea>
+                <button class="btn btn-default submit-comment-button" ng-click="ctrl.createArticleComment(article.oid)">Submit</button>
             </div>
             <div class="row">
                 <div class="col-sm-12">

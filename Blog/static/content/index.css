@@ -39,11 +39,11 @@
     margin-left: 10%
 }
 
-#comment-article-text-input {
+.comment-article-text-input {
     min-width: 100% !important;
 }
 
-#submit-comment-button {
+.submit-comment-button {
     margin-top: 10px;
     float: right
 }
