@@ -3,6 +3,10 @@ angularApp.factory('articleFactory', function ($http) {
         $http.get("/Articles").success(success).error(error);
     }
 
+    function getArticle(id, success, error) {
+        $http.get("/Articles/" + id).success(success).error(error);
+    }
+
     function getLoggedUser(success, error) {
         $http.get("/Users/Login").success(success).error(error);
     }
@@ -27,13 +31,20 @@ angularApp.factory('articleFactory', function ($http) {
         $http.post("/Articles", article).success(success).error(error);
     }
 
+    function createComment(articleID, comment, success, error) {
+        $http.post("/Articles/"+articleID+"/Comment", comment).success(success).error(error);
+    }
+
+
     return {
         getArticles: getArticles,
+        getArticle: getArticle,
         getLoggedUser: getLoggedUser,
         loginUser: loginUser,
         signinUser: signinUser,
         logoutUser: logoutUser,
         deleteArticle: deleteArticle,
-        createArticle: createArticle
+        createArticle: createArticle,
+        createComment: createComment
     };
 });

@@ -9,6 +9,7 @@ from bson.json_util import dumps
 from entities import Article, User, Validation, Comment
 from providers import MongoProvider
 from helpers import CollectionHelper, HttpHelper, EncryptionHelper
+from operator import attrgetter
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -18,22 +19,33 @@ dir_path = os.path.dirname(path)
 def home():
     return static_file("index.html", root=dir_path+'/'+'views/')
 
+def getAllUsers():
+    usercall = MongoProvider.UserCall()
+    mongoUsers = usercall.get()
+    users = list(map(lambda x: User.User.getInstance(x), mongoUsers))
+
+    return users
+
 @bottle.route('/Articles', method=['GET'])
 def getArticles():
     HttpHelper.setJsonContentType()
 
+    users = getAllUsers()
     call = MongoProvider.ArticleCall()
 
-    mongoArticles = call.get()
-    articles = map(lambda x: Article.Article.getInstance(x, True), mongoArticles)
+    mongoArticles = list(call.get())
+    articles = list(map(lambda x: Article.Article.getInstance(x, True, users), mongoArticles))
     
-    dicts = map(lambda x: dict(x), articles)
+    articles_sorted = sorted(articles, key=attrgetter('publish_date'), reverse=True)
+    dicts = map(lambda x: dict(x), articles_sorted)
 
     return dumps(dicts)
 
 @bottle.route('/Articles/<object_id>', method=['GET'])
 def getArticle(object_id):
     HttpHelper.setJsonContentType()
+
+    users = getAllUsers()
 
     call = MongoProvider.ArticleCall()
 
@@ -42,8 +54,7 @@ def getArticle(object_id):
     if(mongoArticle is None):
         return dumps(None)
     else:
-        article = Article.Article.getInstance(mongoArticle, True)
-        article.format()
+        article = Article.Article.getInstance(mongoArticle, True, users)
         return dumps(dict(article))
 
 @bottle.route('/Articles', method=['POST'])
@@ -109,8 +120,8 @@ def createArticle(object_id):
     
     validation = comment.validate()
     if(validation.success == True):
-        article.setPublishTimeToNow()
-        article.setAuthor(str(user["_id"]))
+        comment.setPublishTimeToNow()
+        comment.setAuthor(str(user["_id"]))
         comment.mongoSerialization(True)
 
         call = MongoProvider.ArticleCall()
@@ -125,9 +136,10 @@ def createArticle(object_id):
                 article_comments = []
 
             article_comments.append(comment)
+            article_comments_dicts = list(map(lambda x: dict(x), article_comments))
 
             call = MongoProvider.ArticleCall()
-            ret = call.updateEntireDocument(object_id, {comments: article_comments})
+            ret = call.updateEntireDocument(object_id, {"comments": article_comments_dicts})
 
     return dumps(dict(validation))
 

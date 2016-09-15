@@ -3,6 +3,11 @@ var angularApp = angular.module('MongoApp', []);
 angularApp.controller('ArticleController', function ($scope, articleFactory) {
     var self = this;
 
+    self.globalMessageClass = "";
+    self.globalMessageShow = false;
+    self.globalMessage = "";
+    self.globalMessageTitle = "";
+
     self.loggedUser = null;
     self.loginEmailInput = "";
     self.loginPasswordInput = "";
@@ -47,6 +52,20 @@ angularApp.controller('ArticleController', function ($scope, articleFactory) {
     function loadArticles() {
         articleFactory.getArticles(function (response) {
             self.articles = response;
+            console.log(response);
+            setTimeout(bindTooltips, 100);
+        }, function () { });
+    }
+
+    function reloadArticle(id) {
+
+        articleFactory.getArticle(id, function (response) {
+            var index = _.findIndex(self.articles, function (ar) { return ar.oid == id; });
+            
+            self.articles = _.filter(self.articles, function (ar) { return ar.oid != id; });
+
+            self.articles.splice(index, 0, response);
+
             setTimeout(bindTooltips, 100);
         }, function () { });
     }
@@ -68,6 +87,17 @@ angularApp.controller('ArticleController', function ($scope, articleFactory) {
         } else {
             self.signinMessage = message;
         }
+    }
+
+    function showAlert(type, title, message, timeout) {
+        self.globalMessageClass = type;
+        self.globalMessageTitle = title;
+        self.globalMessage = message;
+        self.globalMessageShow = true;
+
+        setTimeout(function () {
+            self.globalMessageShow = false;
+        }, timeout);
     }
 
     self.init = function () {
@@ -106,8 +136,10 @@ angularApp.controller('ArticleController', function ($scope, articleFactory) {
                 self.loggedUser = response;
                 $("#loginModal").modal("hide");
             }
-
-        }, function () { });
+            
+        }, function() {
+            showAlert("alert-danger", "Error", "An unknown error has occurred", 5000);
+        });
     }
 
     self.logout = function () {
@@ -176,7 +208,19 @@ angularApp.controller('ArticleController', function ($scope, articleFactory) {
             }
 
         }, function () {
-            //Show message
+            showAlert("alert-danger", "Error", "An unknown error has occurred", 5000);
+        });
+    }
+
+    self.createArticleComment = function(articleID) {
+        var text = $("textarea[input-oid=" + articleID + "]:first").val();
+        var comment = { comment: text }
+
+        articleFactory.createComment(articleID, comment, function(response) {
+                reloadArticle(articleID);
+            },
+        function() {
+            showAlert("alert-danger", "Error", "An unknown error has occurred", 5000);
         });
     }
 });

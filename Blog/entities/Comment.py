@@ -1,13 +1,15 @@
 import sys
 import json
 from entities.BaseEntity import BaseEntity
+from entities.Validation import Validation
 from datetime import datetime, timedelta
+from helpers import CollectionHelper
 
 class Comment(BaseEntity):
-    def __init__(self, comment = "", date = "", author = ""):
-        BaseEntity.__init__(self, True)
+    def __init__(self, comment = "", publish_date = "", author = ""):
+        BaseEntity.__init__(self)
         self.comment = comment
-        self.date = date
+        self.publish_date = publish_date
         self.author = author
         self.author_name = ""
         self.publish_date_formatted = ""
@@ -18,7 +20,7 @@ class Comment(BaseEntity):
             yield 'publish_date_formatted', self.publish_date_formatted
             yield 'oid', self.oid
         yield 'comment', self.comment
-        yield 'date', self.date
+        yield 'publish_date', self.publish_date
         yield 'author', self.author
 
     
@@ -39,6 +41,10 @@ class Comment(BaseEntity):
     	comment.fromDictionary(dict)
     	return comment
 
-    def format(self):
+    def format(self, users = []):
         if(self.publish_date != ""):
             self.publish_date_formatted = (self.publish_date - timedelta(hours=3)).strftime("%Y-%m-%d %H:%M")
+
+            commentAuthor = CollectionHelper.firstOrDefault(users, {"key":"oid", "value": self.author})
+            if(commentAuthor is not None):
+                self.author_name = commentAuthor.name

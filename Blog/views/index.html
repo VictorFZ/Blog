@@ -177,22 +177,7 @@
                 </button>
                 <a class="navbar-brand" href="#">Mongo Blog</a>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <!--<ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li class="pointer"><a>teste</a></li>
-                            <li class="pointer"><a>teste</a></li>
-                        </ul>
-                    </li>
-                </ul>-->
-                <form class="navbar-form navbar-left">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
+            <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-left">
                     <li ng-if="ctrl.loggedUser != null"><a ng-click="ctrl.createArticleModal()" href="">Create new article</a></li>
                 </ul>
@@ -205,58 +190,61 @@
             </div>
         </div>
     </nav>
-    <div class="main">
-        <div ng-repeat="article in ctrl.articles">
-            <div class="jumbotron article">
-                <div class="row header">
-                    <div class="col-md-4 delete">
-                        <i class="glyphicon glyphicon-trash tooltip-item pointer" title="Delete Article" ng-click="ctrl.deleteArticleModal(article.oid)"></i>
-                        <i class="glyphicon glyphicon-pencil tooltip-item pointer" style="margin-left: 10px" title="Edit Article" ng-click="ctrl.editArticleModal(article.oid)"></i>
-                    </div>
-                    <div class="col-md-4 title">
-                        <div>{{ article.name }}</div>
-                    </div>
-                    <div class="col-md-4 date">
-                        <div>{{ article.publish_date_formatted }}</div>
-                    </div>
+<div class="main">
+    <div ng-show="ctrl.globalMessageShow" class="alert" ng-class="ctrl.globalMessageClass">
+        <strong>{{ctrl.globalMessageTitle}}</strong> {{ctrl.globalMessage}}
+    </div>
+    <div ng-repeat="article in ctrl.articles">
+        <div class="jumbotron article">
+            <div class="row header">
+                <div class="col-md-4 delete">
+                    <i class="glyphicon glyphicon-trash tooltip-item pointer" title="Delete Article" ng-click="ctrl.deleteArticleModal(article.oid)"></i>
+                    <i class="glyphicon glyphicon-pencil tooltip-item pointer" style="margin-left: 10px" title="Edit Article" ng-click="ctrl.editArticleModal(article.oid)"></i>
                 </div>
-                <div class="body">{{article.text}}</div>
-                <div class="footer">
-                    <div>by {{article.author_name}}</div>
-                    <div>tags: {{article.tags_joined}} </div>
-                    <div>categories: {{article.categories_joined}} </div>
+                <div class="col-md-4 title">
+                    <div>{{ article.name }}</div>
+                </div>
+                <div class="col-md-4 date">
+                    <div>{{ article.publish_date_formatted }}</div>
                 </div>
             </div>
-            <div class="row" style="padding: 0 30px 0 30px">
-                Leave a comment:
-                <textarea input-oid="{{article.oid}}" class="form-control comment-article-text-input" ></textarea>
-                <button class="btn btn-default submit-comment-button" ng-click="ctrl.createArticleComment(article.oid)">Submit</button>
+            <div class="body">{{article.text}}</div>
+            <div class="footer">
+                <div>by {{article.author_name}}</div>
+                <div>tags: {{article.tags_joined}} </div>
+                <div>categories: {{article.categories_joined}} </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3>Comments</h3>
+        </div>
+        <div class="row" style="padding: 0 30px 0 30px">
+            Leave a comment:
+            <textarea input-oid="{{article.oid}}" class="form-control comment-article-text-input"></textarea>
+            <button class="btn btn-default submit-comment-button" ng-click="ctrl.createArticleComment(article.oid)">Submit</button>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Comments</h3>
+            </div>
+        </div>
+        <div class="row" ng-repeat="comment in article.comments">
+            <div class="col-sm-1">
+                <div class="thumbnail">
+                    <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
                 </div>
             </div>
-            <div class="row" ng-repeat="comment in article.comments">
-                <div class="col-sm-1">
-                    <div class="thumbnail">
-                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
-                    </div>
-                </div>
 
-                <div class="col-sm-5">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong>{{comment.author_name}}</strong> <span class="text-muted">commented on {{comment.publish_date_formatted}}</span>
-                        </div>
-                        <div class="panel-body">
-                            {{comment.comment}}
-                        </div>
+            <div class="col-sm-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>{{comment.author_name}}</strong> <span class="text-muted">commented on {{comment.publish_date_formatted}}</span>
+                    </div>
+                    <div class="panel-body">
+                        {{comment.comment}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <script src="/static/scripts/jquery-1.10.2.js"></script>
     <script src="/static/scripts/bootstrap.js"></script>

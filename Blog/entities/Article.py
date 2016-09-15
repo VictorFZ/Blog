@@ -9,6 +9,7 @@ from entities.Category import Category
 from entities.Validation import Validation
 from datetime import datetime, timedelta
 from functools import reduce
+from helpers import CollectionHelper
 
 class Article(BaseEntity):
     def __init__(self, name = "", publish_date = "", slug = "", text = "", author = "", comments = [], tags = [], categories = []):
@@ -60,7 +61,7 @@ class Article(BaseEntity):
     def setAuthor(self, user_id):
         self.author = user_id
 
-    def fromDictionary(self, dictionary, format):
+    def fromDictionary(self, dictionary, format, users = []):
         for k, v in dictionary.items():
             found = next((x for x in self.propertiesToCustomDict if x['p'] == k), None)
             if (found is not None and v is not None):
@@ -72,15 +73,25 @@ class Article(BaseEntity):
             setattr(self, "oid", str(dictionary["_id"]))
 
         if(format):
-            self.format()
+            self.format(users)
 
-    def getInstance(dict, format = False):
+    def getInstance(dict, format = False, users = []):
         article = Article()
-        article.fromDictionary(dict, format)
+        article.fromDictionary(dict, format, users)
         return article
 
-    def format(self):
+    def format(self, users = []):
         if(self.publish_date != ""):
             self.publish_date_formatted = (self.publish_date - timedelta(hours=3)).strftime("%Y-%m-%d %H:%M")
         self.tags_joined = ",".join(list(map(lambda x: x.value,self.tags)))
         self.categories_joined = ",".join(list(map(lambda x: x.value,self.categories)))
+
+        if(users is not None):
+            articleAuthor = CollectionHelper.firstOrDefault(users, {"key":"oid", "value": self.author})
+            if(articleAuthor is not None):
+                self.author_name = articleAuthor.name
+
+            if(self.comments is not None):
+                for comment in self.comments:
+                    comment.format(users)
+

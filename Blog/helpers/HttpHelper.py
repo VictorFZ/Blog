@@ -30,3 +30,6 @@ def setSessionKey(key, value):
 def removeSession():
     session = getSession()
     session.delete()
+
+def getSessionUsername():
+    session = getSession()
