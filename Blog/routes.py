@@ -73,7 +73,7 @@ def createArticle():
     if(validation.success == True):
         article.mongoSerialization()
         article.setPublishTimeToNow()
-        article.setAuthor(str(user["_id"]))
+        article.setAuthor(user["oid"])
 
         call = MongoProvider.ArticleCall()
         ret = call.insert(dict(article))
@@ -121,7 +121,7 @@ def createArticle(object_id):
     validation = comment.validate()
     if(validation.success == True):
         comment.setPublishTimeToNow()
-        comment.setAuthor(str(user["_id"]))
+        comment.setAuthor(user["oid"])
         comment.mongoSerialization(True)
 
         call = MongoProvider.ArticleCall()
@@ -142,18 +142,6 @@ def createArticle(object_id):
             ret = call.updateEntireDocument(object_id, {"comments": article_comments_dicts})
 
     return dumps(dict(validation))
-
-@bottle.route('/Users', method=['GET'])
-def getUsers():
-    HttpHelper.setJsonContentType()
-
-    call = MongoProvider.UserCall()
-
-    mongoUsers = call.get()
-    users = map(lambda x: Entities.User.getInstance(x), mongoUsers)
-    dicts = map(lambda x: dict(x), users)
-
-    return dumps(dicts)
 
 @bottle.route('/Users/Login', method=['GET'])
 def getLoggedUser():
@@ -176,7 +164,7 @@ def logUser():
     if(mongoUser is None):
         return dumps(None)
     else:
-        d = dict(mongoUser)
+        d = dict(User.User.getInstance(mongoUser))
         HttpHelper.setSessionKey("logged_user", d)
         return dumps(d)
 

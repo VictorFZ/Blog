@@ -198,8 +198,8 @@
         <div class="jumbotron article">
             <div class="row header">
                 <div class="col-md-4 delete">
-                    <i class="glyphicon glyphicon-trash tooltip-item pointer" title="Delete Article" ng-click="ctrl.deleteArticleModal(article.oid)"></i>
-                    <i class="glyphicon glyphicon-pencil tooltip-item pointer" style="margin-left: 10px" title="Edit Article" ng-click="ctrl.editArticleModal(article.oid)"></i>
+                    <i class="glyphicon glyphicon-trash tooltip-item pointer" ng-show="ctrl.loggedUser != null && ctrl.loggedUser.oid == article.author" title="Delete Article" ng-click="ctrl.deleteArticleModal(article.oid)"></i>
+                    <i class="glyphicon glyphicon-pencil tooltip-item pointer" ng-show="ctrl.loggedUser != null && ctrl.loggedUser.oid == article.author" style="margin-left: 10px" title="Edit Article" ng-click="ctrl.editArticleModal(article.oid)"></i>
                 </div>
                 <div class="col-md-4 title">
                     <div>{{ article.name }}</div>
@@ -215,7 +215,7 @@
                 <div>categories: {{article.categories_joined}} </div>
             </div>
         </div>
-        <div class="row" style="padding: 0 30px 0 30px">
+        <div class="row" style="padding: 0 30px 0 30px" ng-show="ctrl.loggedUser != null">
             Leave a comment:
             <textarea input-oid="{{article.oid}}" class="form-control comment-article-text-input"></textarea>
             <button class="btn btn-default submit-comment-button" ng-click="ctrl.createArticleComment(article.oid)">Submit</button>
