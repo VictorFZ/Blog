@@ -1,10 +1,22 @@
 angularApp.factory('articleFactory', function ($http) {
-    function getArticles(success, error) {
-        $http.get("/Articles").success(success).error(error);
+    function getArticles(tags, categories, success, error) {
+        $http.get("/Articles?tags="+tags+"&categories="+categories).success(success).error(error);
     }
 
     function getArticle(id, success, error) {
         $http.get("/Articles/" + id).success(success).error(error);
+    }
+
+    function getArticleBySlug(slug, success, error) {
+        $http.get("/Articles/BySlug/" + slug).success(success).error(error);
+    }
+
+    function getCategories(success, error) {
+        $http.get("/Categories").success(success).error(error);
+    }
+
+    function createCategory(category, success, error) {
+        $http.post("/Categories", category).success(success).error(error);
     }
 
     function getLoggedUser(success, error) {
@@ -27,8 +39,16 @@ angularApp.factory('articleFactory', function ($http) {
         $http.delete("/Articles/" + oid).success(success).error(error);
     }
 
+    function deleteCategory(oid, success, error) {
+        $http.delete("/Categories/" + oid).success(success).error(error);
+    }
+
     function createArticle(article, success, error) {
         $http.post("/Articles", article).success(success).error(error);
+    }
+
+	function updateArticle(oid, article, success, error) {
+        $http.post("/Articles/" + oid, article).success(success).error(error);
     }
 
     function createComment(articleID, comment, success, error) {
@@ -38,6 +58,7 @@ angularApp.factory('articleFactory', function ($http) {
 
     return {
         getArticles: getArticles,
+        getArticleBySlug: getArticleBySlug,
         getArticle: getArticle,
         getLoggedUser: getLoggedUser,
         loginUser: loginUser,
@@ -45,6 +66,10 @@ angularApp.factory('articleFactory', function ($http) {
         logoutUser: logoutUser,
         deleteArticle: deleteArticle,
         createArticle: createArticle,
-        createComment: createComment
+        createComment: createComment,
+		    updateArticle: updateArticle,
+        createCategory: createCategory,
+        getCategories: getCategories,
+        deleteCategory: deleteCategory
     };
 });

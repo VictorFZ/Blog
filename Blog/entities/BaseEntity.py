@@ -12,7 +12,7 @@ class BaseEntity(object):
         for k, v in dictionary.items():
         	setattr(self, k, v)
         if '_id' in dictionary:
-        	setattr(self, "oid", str(dictionary["_id"]))
+            setattr(self, "oid", str(dictionary["_id"]))
 
     def mongoSerialization(self, is_edit = False):
         self.mongo_serialize = True

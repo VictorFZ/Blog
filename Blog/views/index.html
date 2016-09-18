@@ -9,13 +9,15 @@
     <link rel="stylesheet" type="text/css" href="/static/content/index.css" />
     <script src="/static/scripts/modernizr-2.6.2.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="http:////ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-sanitize.js"></script>
+
     <script src="/static/scripts/underscore-min.js"></script>
     <script src="/static/scripts/Angular/ArticleController.js"></script>
     <script src="/static/scripts/Angular/ArticleFactory.js"></script>
 </head>
 
 <body ng-controller="ArticleController as ctrl" ng-init="ctrl.init()" ng-cloak>
-
+    <a href="/" style="margin-left: 10px" class="btn btn-default" ng-show="ctrl.articleSlug != null">Go Back to Posts</a>
     <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -142,15 +144,16 @@
                     <div class="form-group row">
                         <label for="create-article-categories-input" class="col-xs-2 col-form-label">Categories</label>
                         <div class="col-xs-10">
-                            <input ng-model="ctrl.createArticleCategoriesInput" class="form-control" type="text" id="create-article-categories-input">
-                            <small class="form-text text-muted">Separate the categories with a comma (,)</small>
+                          <select class="form-control" id="create-article-categories-input">
+                            <option ng-repeat="category in ctrl.categories" value="{{category.value}}">{{category.value}}</option>
+                          </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="create-article-slug-input" class="col-xs-2 col-form-label">Name</label>
+                        <label for="create-article-slug-input" class="col-xs-2 col-form-label">Slug</label>
                         <div class="col-xs-10">
                             <input ng-model="ctrl.createArticleSlugInput" class="form-control" type="text" id="create-article-slug-input">
-                            <small class="form-text text-muted">http://localhost:8080/Article/{{ctrl.createArticleSlugInput}}</small>
+                            <small class="form-text text-muted">http://localhost:8080/posts/{{ctrl.createArticleSlugInput}}</small>
                         </div>
                     </div>
                     <div class="alert alert-danger" ng-show="ctrl.createArticleError">
@@ -159,12 +162,46 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" ng-click="ctrl.createArticle()" class="btn btn-primary">Create</button>
+                    <button type="button" ng-click="ctrl.createArticle()" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="createCategoryModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Create new Categories</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="create-category-name-input" class="col-xs-2 col-form-label">Name</label>
+                        <div class="col-xs-10">
+                            <input ng-model="ctrl.createCategoryNameInput" class="form-control" type="text" id="create-category-name-input">
+                        </div>
+                    </div>
+                    <div class="alert alert-danger" ng-show="ctrl.createCategoryError">
+                        <p>{{ctrl.createCategoryMessage}}</p>
+                    </div>
+                    <div>
+                      <h4>Created categories</h4>
+                      <div ng-repeat="category in ctrl.categories">
+                        <div style="display: flex">
+                          <p style="margin-right: 5px">{{category.value}}</p>
+                          <i class="glyphicon glyphicon-trash tooltip-item pointer" ng-show="ctrl.loggedUser != null" title="Delete Category" ng-click="ctrl.deleteCategory(category.oid)"></i>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" ng-click="ctrl.createCategory()" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
@@ -178,9 +215,20 @@
                 <a class="navbar-brand" href="#">Mongo Blog</a>
             </div>
             <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-left">
-                    <li ng-if="ctrl.loggedUser != null"><a ng-click="ctrl.createArticleModal()" href="">Create new article</a></li>
-                </ul>
+              <ul class="nav navbar-nav navbar-left">
+                  <li ng-if="ctrl.loggedUser != null"><a ng-click="ctrl.createArticleModal()" href="">Create new article</a></li>
+                  <li ng-if="ctrl.loggedUser != null"><a ng-click="ctrl.createCategoryModal()" href="">Create new categories</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-left">
+                  <li ng-show="ctrl.hasFilterTags" style="padding: 15px 0 15px 0">
+                    <span>Filtering by tag: {{ctrl.filterTags}}</span>
+                    <i class="glyphicon glyphicon-remove pointer" style="font-size: 10px;" ng-click="ctrl.deleteTagFilter()"></i>
+                  </li>
+                  <li style="margin-left: 10px; padding: 15px 0 15px 0" ng-show="ctrl.hasFilterCategories">
+                      <span>Filtering by category: {{ctrl.filterCategories}}</span>
+                      <i class="glyphicon glyphicon-remove pointer" style="font-size: 10px;" ng-click="ctrl.deleteCategoryFilter()"></i>
+                  </li>
+              </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="ctrl.loggedUser != null"><a href="">Hello! {{ctrl.loggedUser.name}}</a></li>
                     <li class="pointer" ng-if="ctrl.loggedUser != null"><a ng-click="ctrl.logout()" href="">Log out</a></li>
@@ -194,25 +242,37 @@
     <div ng-show="ctrl.globalMessageShow" class="alert" ng-class="ctrl.globalMessageClass">
         <strong>{{ctrl.globalMessageTitle}}</strong> {{ctrl.globalMessage}}
     </div>
-    <div ng-repeat="article in ctrl.articles">
+    <div ng-show="ctrl.articleNotFound">
+      <p>Oops! Article not found</p>
+    </div>
+    <div ng-hide="ctrl.articleNotFound" ng-repeat="article in ctrl.articles" style="margin-bottom: 10px;border-bottom: solid 1px #ccc;">
         <div class="jumbotron article">
             <div class="row header">
                 <div class="col-md-4 delete">
-                    <i class="glyphicon glyphicon-trash tooltip-item pointer" ng-show="ctrl.loggedUser != null && ctrl.loggedUser.oid == article.author" title="Delete Article" ng-click="ctrl.deleteArticleModal(article.oid)"></i>
-                    <i class="glyphicon glyphicon-pencil tooltip-item pointer" ng-show="ctrl.loggedUser != null && ctrl.loggedUser.oid == article.author" style="margin-left: 10px" title="Edit Article" ng-click="ctrl.editArticleModal(article.oid)"></i>
+                    <i class="glyphicon glyphicon-trash tooltip-item pointer" ng-show="ctrl.loggedUser != null" title="Delete Article" ng-click="ctrl.deleteArticleModal(article.oid)"></i>
+                    <i class="glyphicon glyphicon-pencil tooltip-item pointer" ng-show="ctrl.loggedUser != null" style="margin-left: 10px" title="Edit Article" ng-click="ctrl.editArticleModal(article)"></i>
                 </div>
                 <div class="col-md-4 title">
-                    <div>{{ article.name }}</div>
+                    <div><a href="/posts/{{article.slug}}">{{ article.name }}</a></div>
                 </div>
                 <div class="col-md-4 date">
                     <div>{{ article.publish_date_formatted }}</div>
                 </div>
             </div>
-            <div class="body">{{article.text}}</div>
+            <div class="body" ng-bind-html="article.text">
+            </div>
             <div class="footer">
                 <div>by {{article.author_name}}</div>
-                <div>tags: {{article.tags_joined}} </div>
-                <div>categories: {{article.categories_joined}} </div>
+                <div>tags:
+                  <span ng-repeat="tag in article.tags">
+                    <a ng-click="ctrl.filterTag(tag.value)" class="pointer">{{tag.value}}</a>
+                  </span>
+                </div>
+                <div>categories:
+                  <span ng-repeat="category in article.categories">
+                    <a ng-click="ctrl.filterCategory(category.value)" class="pointer">{{category.value}}</a>
+                  </span>
+                </div>
             </div>
         </div>
         <div class="row" style="padding: 0 30px 0 30px" ng-show="ctrl.loggedUser != null">
@@ -222,9 +282,10 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <h3>Comments</h3>
+                <h3>Comments ({{article.comments.length}})</h3>
             </div>
         </div>
+		<p ng-if="article.comments.length == 0">No comments yet</p>
         <div class="row" ng-repeat="comment in article.comments">
             <div class="col-sm-1">
                 <div class="thumbnail">
@@ -232,7 +293,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-5">
+            <div class="col-sm-11">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <strong>{{comment.author_name}}</strong> <span class="text-muted">commented on {{comment.publish_date_formatted}}</span>

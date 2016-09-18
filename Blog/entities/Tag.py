@@ -11,8 +11,9 @@ class Tag(BaseEntity):
 		if(self.mongo_serialize == False):
 			yield 'oid', self.oid
 		yield 'value', self.value
-
-	def getInstance(dict):
+	
+	@classmethod
+	def getInstance(self, dict):
 		tag = Tag()
 		tag.fromDictionary(dict)
 		return tag
